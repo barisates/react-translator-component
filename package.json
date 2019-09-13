@@ -1,0 +1,50 @@
+{
+  "name": "react-translator-component",
+  "version": "1.1.0",
+  "description": "React language translation module for developing a multilingual project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src --out-file index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barisates/react-translator-component.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "react-component",
+    "translate",
+    "translator",
+    "internationalization",
+    "multilingual",
+    "localization",
+    "react-translator",
+    "react-translate",
+    "react-translation"
+  ],
+  "author": "barisates (info@barisates.com), eneszeren (info@eneszeren.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barisates/react-translator-component/issues"
+  },
+  "homepage": "https://github.com/barisates/react-translator-component#readme",
+  "peerDependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-html-parser": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "react-html-parser": "^2.0.2"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-html-parser": "^2.0.2"
+  }
+}

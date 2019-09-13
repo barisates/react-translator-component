@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.language-lists {
+  width: 100%;
+  font-size: 16px;
+}
+
+.author {
+  bottom: 10px;
+  position: fixed;
+}
+
+.author a {
+  color: #dadada;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.author a:hover {
+  color: #696969;
+}
+
+table td {
+  vertical-align: top;
+}
+
+.custom-language-list {
+  margin-top: 20px;
+  padding: 3px 10px;
+}
