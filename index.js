@@ -214,6 +214,7 @@ function (_Component2) {
                 className: "rtc-dropdown-menu"
               }, Object.keys(Config.list).map(function (key) {
                 return _react["default"].createElement("button", {
+                  key: key,
                   type: "button",
                   className: "rtc-btn",
                   "data-selected": key === language,
@@ -227,7 +228,7 @@ function (_Component2) {
                 }, _react["default"].createElement("img", {
                   src: Config.list[key].icon,
                   alt: "Flag",
-                  "class": "rtc-flag"
+                  className: "rtc-flag"
                 }), " ", Config.list[key].text);
               }))));
             }

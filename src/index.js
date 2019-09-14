@@ -139,12 +139,12 @@ export class LanguageList extends Component {
                             )
                         } else if (this.props.Theme === "Dropdown") {
                             return (
-                                <div  {...this.props}>
+                                <div {...this.props}>
                                     <div className={"rtc-dropdown " + (this.state.toggle ? "toggle" : "")}>
                                         <button type="button" className="rtc-dropdown-toggle" onClick={(e) => this.setState({ toggle: !this.state.toggle })} ><img src={Config.list[language].icon} alt="Flag" /> {Config.list[language].text}</button>
                                         <div className="rtc-dropdown-menu">
                                             {Object.keys(Config.list).map(key => (
-                                                <button type="button" className="rtc-btn" data-selected={(key === language)} onClick={(e) => { onChangeLanguage(key); this.setState({ toggle: false }) }}><img src={Config.list[key].icon} alt="Flag" class="rtc-flag" /> {Config.list[key].text}</button>
+                                                <button key={key} type="button" className="rtc-btn" data-selected={(key === language)} onClick={(e) => { onChangeLanguage(key); this.setState({ toggle: false }) }}><img src={Config.list[key].icon} alt="Flag" className="rtc-flag" /> {Config.list[key].text}</button>
                                             ))}
                                         </div>
                                     </div>
