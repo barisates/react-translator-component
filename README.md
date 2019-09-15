@@ -1,6 +1,10 @@
 # react-translator-component
 React language translation module for developing a multilingual project.
 
+[![npm package][npm-image]][npm-url] 
+[![Build Status][travis-image]][travis-url] 
+[![Dependencies Status][david-image]][david-url]
+
 ## Getting started
 
 #### Install with NPM:
@@ -20,7 +24,7 @@ Quite simple to use;
 
 ```jsx
 // App.js
-import React, { Component } from 'react';
+import React from 'react';
 import { TranslatorProvider, TranslatorContext, T, TF, LanguageList } from 'react-translator-component'
 
 const config = {
@@ -170,3 +174,10 @@ Use with the dropdown theme.
 **Enes Zeren**
 - http://eneszeren.com
 - [github/eneszeren](https://github.com/eneszeren "github/eneszeren")
+
+[npm-image]:https://img.shields.io/npm/v/react-translator-component.svg
+[npm-url]:https://www.npmjs.com/package/react-translator-component
+[travis-image]:https://travis-ci.org/barisates/react-translator-component.svg?branch=master
+[travis-url]:https://travis-ci.org/barisates/react-translator-component
+[david-image]:https://david-dm.org/barisates/react-translator-component.svg
+[david-url]:https://david-dm.org/barisates/react-translator-component

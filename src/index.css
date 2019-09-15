@@ -1,0 +1,111 @@
+/* Standart */
+ul.rtc-translator {
+  list-style: none;
+  font-size: 13px;
+  text-align: left;
+  padding-inline-start: unset;
+  display: inline-block;
+}
+
+ul.rtc-translator li {
+  display: flex;
+  line-height: 16px;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+ul.rtc-translator li[data-selected="true"] {
+  box-shadow: inset 0px 0px 1px 1px rgb(146, 146, 146);
+  border-radius: 5px;
+}
+
+ul.rtc-translator li:hover {
+  box-shadow: inset 0px 0px 1px 1px rgb(146, 146, 146);
+  border-radius: 5px;
+}
+
+ul.rtc-translator li img.rtc-flag {
+  height: 16px;
+  margin-right: 0.3em;
+}
+
+
+/* Dropdown */
+div.rtc-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+div.rtc-dropdown.toggle .rtc-dropdown-toggle {
+  border-radius: 3px 3px 0px 0px;
+}
+
+div.rtc-dropdown .rtc-dropdown-toggle {
+  color: #000;
+  background-color: #ffffff;
+  border-color: #6c757d;
+  border-radius: 3px;
+  font-size: 14px;
+  border: 1px solid transparent;
+  padding: 4px 15px;
+  display: flex;
+  line-height: 20px;
+  cursor: pointer;
+  outline: 0;
+}
+
+div.rtc-dropdown .rtc-dropdown-toggle::after {
+  display: inline-block;
+  margin-left: .5em;
+  vertical-align: .155em;
+  content: "";
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
+  margin-top: 7px;
+}
+
+div.rtc-dropdown .rtc-dropdown-toggle img {
+  height: 20px;
+  margin-right: 7px;
+}
+div.rtc-dropdown.toggle .rtc-dropdown-menu {
+display: unset;
+}
+div.rtc-dropdown .rtc-dropdown-menu {
+  background-color: #ffffff;
+  border-radius: 0px 3px 3px 3px;
+  position: absolute;
+  will-change: transform;
+  top: 0px;
+  left: 0px;
+  transform: translate3d(0px, 30px, 0px);
+  min-width: 120px;
+  padding: 4px 6px;
+  border-color: #e9ecef;
+  margin: 0;
+  display: none;
+}
+
+.rtc-dropdown .rtc-dropdown-menu .rtc-btn {
+  color: #000;
+  background-color: transparent;
+  font-size: 14px;
+  border: 1px solid transparent;
+  padding: 4px 15px;
+  display: flex;
+  line-height: 19px;
+  cursor: pointer;
+  width: 100%;
+  outline: 0;
+}
+
+.rtc-dropdown .rtc-dropdown-menu .rtc-btn:hover, .rtc-dropdown .rtc-dropdown-menu .rtc-btn[data-selected="true"] {
+  background-color: #dcdcdc;
+}
+
+.rtc-dropdown .rtc-dropdown-menu .rtc-btn img {
+  height: 20px;
+  margin-right: 7px;
+}
