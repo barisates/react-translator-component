@@ -1,11 +1,11 @@
 {
   "name": "react-translator-component",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "React language translation module for developing a multilingual project.",
   "main": "index.js",
   "scripts": {
     "test": "react-scripts test",
-    "build": "./node_modules/.bin/babel src --out-file index.js"
+    "build": "./node_modules/.bin/babel src/index.js --out-file index.js"
   },
   "repository": {
     "type": "git",

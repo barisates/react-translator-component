@@ -241,11 +241,3 @@ function (_Component2) {
 }(_react.Component);
 
 exports.LanguageList = LanguageList;
-"use strict";
-
-var _index = require("./index");
-
-it('renders without crashing', function () {
-  (0, _index.T)("Test");
-  (0, _index.TF)("{0} {1}", "Format", "Test");
-});
