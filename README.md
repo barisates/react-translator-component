@@ -4,6 +4,7 @@ React language translation module for developing a multilingual project.
 [![npm package][npm-image]][npm-url] 
 [![Build Status][travis-image]][travis-url] 
 [![Dependencies Status][david-image]][david-url]
+[![Package Size][bundlephobia-image]][bundlephobia-url]
 
 ## Getting started
 
@@ -181,3 +182,5 @@ Use with the dropdown theme.
 [travis-url]:https://travis-ci.org/barisates/react-translator-component
 [david-image]:https://david-dm.org/barisates/react-translator-component.svg
 [david-url]:https://david-dm.org/barisates/react-translator-component
+[bundlephobia-image]:https://badgen.net/bundlephobia/minzip/react-translator-component
+[bundlephobia-url]:https://bundlephobia.com/result?p=react-translator-component
