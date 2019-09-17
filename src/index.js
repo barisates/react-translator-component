@@ -109,25 +109,26 @@ export class LanguageList extends Component {
         }
     }
     render() {
+        const { Theme, Language, ...props } = this.props;
         return (
             <TranslatorContext>
                 {({ language, onChangeLanguage }) => {
 
                     // Custom List
-                    if (this.props.Language) {
+                    if (Language) {
 
-                        if (customLanguage != this.props.Language)
-                            onChangeLanguage(this.props.Language);
+                        if (customLanguage != Language)
+                            onChangeLanguage(Language);
 
-                        customLanguage = this.props.Language;
+                        customLanguage = Language;
                         return ("");
                     }
                     // Default List
                     else {
 
-                        if (!this.props.Theme) {
+                        if (!Theme) {
                             return (
-                                <div {...this.props}>
+                                <div {...props}>
                                     <ul className="rtc-translator">
                                         {Object.keys(Config.list).map(key => (
                                             <li key={key} value={key} data-selected={(key === language)} onClick={(e) => onChangeLanguage(key)}>
@@ -137,9 +138,9 @@ export class LanguageList extends Component {
                                     </ul>
                                 </div>
                             )
-                        } else if (this.props.Theme === "Dropdown") {
+                        } else if (Theme === "Dropdown") {
                             return (
-                                <div {...this.props}>
+                                <div {...props}>
                                     <div className={"rtc-dropdown " + (this.state.toggle ? "toggle" : "")}>
                                         <button type="button" className="rtc-dropdown-toggle" onClick={(e) => this.setState({ toggle: !this.state.toggle })} ><img src={Config.list[language].icon} alt="Flag" /> {Config.list[language].text}</button>
                                         <div className="rtc-dropdown-menu">

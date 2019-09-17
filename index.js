@@ -19,6 +19,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -166,19 +170,24 @@ function (_Component2) {
     value: function render() {
       var _this3 = this;
 
+      var _this$props = this.props,
+          Theme = _this$props.Theme,
+          Language = _this$props.Language,
+          props = _objectWithoutProperties(_this$props, ["Theme", "Language"]);
+
       return _react["default"].createElement(TranslatorContext, null, function (_ref) {
         var language = _ref.language,
             onChangeLanguage = _ref.onChangeLanguage;
 
         // Custom List
-        if (_this3.props.Language) {
-          if (customLanguage != _this3.props.Language) onChangeLanguage(_this3.props.Language);
-          customLanguage = _this3.props.Language;
+        if (Language) {
+          if (customLanguage != Language) onChangeLanguage(Language);
+          customLanguage = Language;
           return "";
         } // Default List
         else {
-            if (!_this3.props.Theme) {
-              return _react["default"].createElement("div", _this3.props, _react["default"].createElement("ul", {
+            if (!Theme) {
+              return _react["default"].createElement("div", props, _react["default"].createElement("ul", {
                 className: "rtc-translator"
               }, Object.keys(Config.list).map(function (key) {
                 return _react["default"].createElement("li", {
@@ -196,8 +205,8 @@ function (_Component2) {
                   className: "rtc-title"
                 }, Config.list[key].text));
               })));
-            } else if (_this3.props.Theme === "Dropdown") {
-              return _react["default"].createElement("div", _this3.props, _react["default"].createElement("div", {
+            } else if (Theme === "Dropdown") {
+              return _react["default"].createElement("div", props, _react["default"].createElement("div", {
                 className: "rtc-dropdown " + (_this3.state.toggle ? "toggle" : "")
               }, _react["default"].createElement("button", {
                 type: "button",

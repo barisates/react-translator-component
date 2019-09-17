@@ -86,7 +86,7 @@ class App extends Component {
               </tr>
             </tbody>
           </table>
-          <div className="author"><a href="https://github.com/barisates" target="_blank">barisates</a> <a href="https://github.com/eneszeren" target="_blank">eneszeren</a></div>
+          <div className="author"><a href="https://github.com/barisates" target="_blank" rel="noopener noreferrer">barisates</a> <a href="https://github.com/eneszeren" target="_blank" rel="noopener noreferrer">eneszeren</a></div>
         </header>
       </div>
 
