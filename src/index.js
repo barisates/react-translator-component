@@ -9,9 +9,36 @@ const storageKey = {
     missing: 'rtc-missing-keys'
 };
 
-let Config = {};
-
+let Config = { 
+    default: "", 
+    list: [] 
+};
 let file = {};
+
+const LocalStorage = {
+    support: () => {
+        try {
+            const key = "jcfOnRWMIvigArtNb1z3hj6yQ2xlZGiD";
+            localStorage.setItem(key, key);
+            localStorage.removeItem(key);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    },
+    getItem: (key) => {
+        if (LocalStorage.support()) {
+            return localStorage.getItem(key)
+        }
+
+        return null;
+    },
+    setItem: (key, value) => {
+        if (LocalStorage.support()) {
+            localStorage.setItem(key, value)
+        }
+    }
+}
 
 export const TranslatorContext = Context.Consumer;
 
@@ -20,13 +47,13 @@ export class TranslatorProvider extends Component {
         super(props)
 
         // load config
-        Config = props.Config;
+        Config = (props.Config || Config);
 
         // set language
-        let language = (localStorage.getItem(storageKey.lang) || Config.default);
+        let language = (LocalStorage.getItem(storageKey.lang) || Config.default);
 
         // load file
-        file = Config.list[language].file;
+        file = (Config.list[language] ? Config.list[language].file : "");
 
         // set state language
         this.state = {
@@ -38,8 +65,9 @@ export class TranslatorProvider extends Component {
     onChangeLanguage(language) {
 
         if (language !== this.state.language) {
+
             // set localStorage
-            localStorage.setItem(storageKey.lang, language);
+            LocalStorage.setItem(storageKey.lang, language);
 
             // load file
             file = Config.list[language].file;
@@ -87,11 +115,11 @@ const TranslateFormat = (text, ...args) => {
 
 const SetLanguageFile = (text) => {
 
-    let languageFile = (JSON.parse(localStorage.getItem(storageKey.missing)) || {});
-    languageFile[text] = text;
+    let languageFile = (JSON.parse(LocalStorage.getItem(storageKey.missing)) || {});
+    languageFile["\"" + text + "\""] = text;
 
     try {
-        localStorage.setItem(storageKey.missing, JSON.stringify(languageFile));
+        LocalStorage.setItem(storageKey.missing, JSON.stringify(languageFile));
     } catch (error) {
 
     }
