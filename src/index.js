@@ -62,7 +62,7 @@ class Translator extends Component {
     };
   }
 
-  componentDidMount() {
+  render() {
     Session.onSet(data => {
       const { language } = data;
       const { language: stateLanguage } = this.state;
@@ -78,9 +78,7 @@ class Translator extends Component {
         this.setState({ language });
       }
     });
-  }
 
-  render() {
     const { children } = this.props;
     const { language } = this.state;
     return (
