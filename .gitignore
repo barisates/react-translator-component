@@ -1,5 +1,6 @@
 .DS_STORE
 node_modules
+dist/__tests__/**/*.js
 scripts/flow/*/.flowconfig
 *~
 *.pyc
@@ -19,9 +20,9 @@ chrome-user-data
 *.sublime-workspace
 .idea
 *.iml
-.vscode
 *.swp
 *.swo
+
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build

@@ -1,192 +1,139 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
+import PropTypes from 'prop-types';
+import Session from 'react-session-api';
+import ChangeLanguageList from './list';
 import './index.css';
 
-const Context = React.createContext();
-
 const storageKey = {
-    lang: 'rtc-lang',
-    missing: 'rtc-missing-keys'
+  lang: 'rtc-lang',
+  missing: 'rtc-missing-keys',
 };
 
-let Config = { 
-    default: "", 
-    list: [] 
+let Config = {
+  default: '',
+  list: [],
 };
+
 let file = {};
 
 const LocalStorage = {
-    support: () => {
-        try {
-            const key = "jcfOnRWMIvigArtNb1z3hj6yQ2xlZGiD";
-            localStorage.setItem(key, key);
-            localStorage.removeItem(key);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    },
-    getItem: (key) => {
-        if (LocalStorage.support()) {
-            return localStorage.getItem(key)
-        }
-
-        return null;
-    },
-    setItem: (key, value) => {
-        if (LocalStorage.support()) {
-            localStorage.setItem(key, value)
-        }
+  support: () => {
+    try {
+      const key = 'jcfOnRWMIvigArtNb1z3hj6yQ2xlZGiD';
+      localStorage.setItem(key, key);
+      localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      return false;
     }
-}
+  },
+  getItem: key => {
+    if (LocalStorage.support()) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  },
+  setItem: (key, value) => {
+    if (LocalStorage.support()) {
+      localStorage.setItem(key, value);
+    }
+  },
+};
 
-export const TranslatorContext = Context.Consumer;
 
-export class TranslatorProvider extends Component {
-    constructor(props) {
-        super(props)
+class Translator extends Component {
+  constructor(props) {
+    super(props);
 
-        // load config
-        Config = (props.Config || Config);
+    // load config
+    Config = (props.Config || Config);
 
-        // set language
-        let language = (LocalStorage.getItem(storageKey.lang) || Config.default);
+    // set language
+    const language = (LocalStorage.getItem(storageKey.lang) || Config.default);
+
+    // load file
+    file = (Config.list[language] ? Config.list[language].file : '');
+
+    Session.set(language, language);
+    // set state language
+    this.state = {
+      language,
+    };
+  }
+
+  componentDidMount() {
+    Session.onSet(data => {
+      const { language } = data;
+      const { language: stateLanguage } = this.state;
+
+      if (language && language !== stateLanguage) {
+        // set localStorage
+        LocalStorage.setItem(storageKey.lang, language);
 
         // load file
-        file = (Config.list[language] ? Config.list[language].file : "");
+        file = Config.list[language].file;
 
         // set state language
-        this.state = {
-            language: language
-        }
+        this.setState({ language });
+      }
+    });
+  }
 
-        this.onChangeLanguage = this.onChangeLanguage.bind(this);
-    }
-    onChangeLanguage(language) {
-
-        if (language !== this.state.language) {
-
-            // set localStorage
-            LocalStorage.setItem(storageKey.lang, language);
-
-            // load file
-            file = Config.list[language].file;
-
-            // set state language
-            this.setState({ language });
-        }
-    }
-    render() {
-        return (
-            <Context.Provider value={{
-                language: this.state.language,
-                onChangeLanguage: this.onChangeLanguage
-            }}>
-                {this.props.children}
-            </Context.Provider>
-        )
-    }
-
+  render() {
+    const { children } = this.props;
+    const { language } = this.state;
+    return (
+      <>
+        {React.cloneElement(children, { language })}
+      </>
+    );
+  }
 }
 
+Translator.propTypes = {
+  children: PropTypes.node,
+  Config: PropTypes.object,
+};
 
-export const T = (text) => {
-    return (ReactHtmlParser(file[text] || SetLanguageFile(text)))
-}
+Translator.defaultProps = {
+  children: null,
+  Config: {
+    default: '',
+    list: [],
+  },
+};
 
 
-export const TF = (text, ...args) => {
-    return (TranslateFormat(text, args))
-}
+const SetLanguageFile = text => {
+  const languageFile = (JSON.parse(LocalStorage.getItem(storageKey.missing)) || {});
+
+  languageFile[`"${text}"`] = text;
+
+  try {
+    LocalStorage.setItem(storageKey.missing, JSON.stringify(languageFile));
+    // eslint-disable-next-line no-empty
+  } catch { }
+
+  return text;
+};
+
+const T = text => (ReactHtmlParser(file[text] || SetLanguageFile(text)));
 
 const TranslateFormat = (text, ...args) => {
-    args = args[0];
-    let traslatedText = T(text)[0];
+  const traslatedText = T(text)[0];
 
-    let formatText = traslatedText.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined'
-            ? args[number]
-            : match
-            ;
-    });
+  const formatText = traslatedText.replace(/{(\d+)}/g, (match, number) => (
+    typeof args[0][number] !== 'undefined'
+      ? args[0][number]
+      : match
+  ));
 
-    return (formatText)
-}
+  return formatText;
+};
 
-const SetLanguageFile = (text) => {
+const TF = (text, ...args) => (TranslateFormat(text, args));
 
-    let languageFile = (JSON.parse(LocalStorage.getItem(storageKey.missing)) || {});
-    languageFile["\"" + text + "\""] = text;
+const LanguageList = props => <ChangeLanguageList {...props} />;
 
-    try {
-        LocalStorage.setItem(storageKey.missing, JSON.stringify(languageFile));
-    } catch (error) {
-
-    }
-
-    return text;
-}
-
-let customLanguage = "";
-
-export class LanguageList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            toggle: false
-        }
-    }
-    render() {
-        const { Theme, Language, ...props } = this.props;
-        return (
-            <TranslatorContext>
-                {({ language, onChangeLanguage }) => {
-
-                    // Custom List
-                    if (Language) {
-
-                        if (customLanguage != Language)
-                            onChangeLanguage(Language);
-
-                        customLanguage = Language;
-                        return ("");
-                    }
-                    // Default List
-                    else {
-
-                        if (!Theme) {
-                            return (
-                                <div {...props}>
-                                    <ul className="rtc-translator">
-                                        {Object.keys(Config.list).map(key => (
-                                            <li key={key} value={key} data-selected={(key === language)} onClick={(e) => onChangeLanguage(key)}>
-                                                <img src={Config.list[key].icon} alt="Flag" className="rtc-flag" /> <span className="rtc-title">{Config.list[key].text}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )
-                        } else if (Theme === "Dropdown") {
-                            return (
-                                <div {...props}>
-                                    <div className={"rtc-dropdown " + (this.state.toggle ? "toggle" : "")}>
-                                        <button type="button" className="rtc-dropdown-toggle" onClick={(e) => this.setState({ toggle: !this.state.toggle })} ><img src={Config.list[language].icon} alt="Flag" /> {Config.list[language].text}</button>
-                                        <div className="rtc-dropdown-menu">
-                                            {Object.keys(Config.list).map(key => (
-                                                <button key={key} type="button" className="rtc-btn" data-selected={(key === language)} onClick={(e) => { onChangeLanguage(key); this.setState({ toggle: false }) }}><img src={Config.list[key].icon} alt="Flag" className="rtc-flag" /> {Config.list[key].text}</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-
-                    }
-
-
-                }}
-            </TranslatorContext>)
-
-    }
-
-}
+export { Translator, T, TF, LanguageList };
