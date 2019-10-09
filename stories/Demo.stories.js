@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 import React, { Component } from 'react';
-import { Translator, T, TF, LanguageList } from '../src';
+import { Translator, T, TF, LanguageList, Config } from '../src';
 import './css/bootstrap.min.css';
 import './css/demo.css';
 
@@ -8,53 +8,52 @@ export default {
   title: 'Demo',
 };
 
-const config = {
-  default: 'tr',
-  list: {
-    de: {
-      text: 'Deutsch',
-      icon: require('./locale/flags/de.svg'),
-      file: require('./locale/de'),
-    },
-    en: {
-      text: 'English',
-      icon: require('./locale/flags/en.svg'),
-      file: require('./locale/en'),
-    },
-    es: {
-      text: 'Español',
-      icon: require('./locale/flags/es.svg'),
-      file: require('./locale/es'),
-    },
-    fr: {
-      text: 'Français',
-      icon: require('./locale/flags/fr.svg'),
-      file: require('./locale/fr'),
-    },
-    it: {
-      text: 'Italiano',
-      icon: require('./locale/flags/it.svg'),
-      file: require('./locale/it'),
-    },
-    ru: {
-      text: 'Pусский',
-      icon: require('./locale/flags/ru.svg'),
-      file: require('./locale/ru'),
-    },
-    tr: {
-      text: 'Türkçe',
-      icon: require('./locale/flags/tr.svg'),
-      file: require('./locale/tr'),
-    },
+Config.default = 'tr';
+Config.list = {
+  de: {
+    text: 'Deutsch',
+    icon: require('./locale/flags/de.svg'),
+    file: require('./locale/de'),
+  },
+  en: {
+    text: 'English',
+    icon: require('./locale/flags/en.svg'),
+    file: require('./locale/en'),
+  },
+  es: {
+    text: 'Español',
+    icon: require('./locale/flags/es.svg'),
+    file: require('./locale/es'),
+  },
+  fr: {
+    text: 'Français',
+    icon: require('./locale/flags/fr.svg'),
+    file: require('./locale/fr'),
+  },
+  it: {
+    text: 'Italiano',
+    icon: require('./locale/flags/it.svg'),
+    file: require('./locale/it'),
+  },
+  ru: {
+    text: 'Pусский',
+    icon: require('./locale/flags/ru.svg'),
+    file: require('./locale/ru'),
+  },
+  tr: {
+    text: 'Türkçe',
+    icon: require('./locale/flags/tr.svg'),
+    file: require('./locale/tr'),
   },
 };
+
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      language: config.default,
+      language: Config.default,
     };
   }
 
@@ -78,16 +77,16 @@ class App extends Component {
               <tr>
                 <td>
                   <p>Dropdown Theme</p>
-                  <LanguageList Theme="Dropdown" Config={config} />
+                  <LanguageList Theme="Dropdown" />
                   <br />
                   <br />
                   <p>Default Theme</p>
-                  <LanguageList Config={config} />
+                  <LanguageList />
                 </td>
                 <td>
-                  <LanguageList Language={language} Config={config} />
+                  <LanguageList Language={language} />
                   <select className="custom-language-list" value={language} onChange={e => this.setState({ language: e.target.value })}>
-                    {Object.keys(config.list).map(key => (<option key={key} value={key}>{config.list[key].text}</option>))}
+                    {Object.keys(Config.list).map(key => (<option key={key} value={key}>{Config.list[key].text}</option>))}
                   </select>
                 </td>
               </tr>
@@ -104,7 +103,8 @@ class App extends Component {
 }
 
 export const Demo = () => (
-  <Translator Config={config}>
+
+  <Translator>
     <App />
   </Translator>
 );

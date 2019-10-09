@@ -1,71 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
+import Config from './config';
+import Storage from './storage';
+import { Dropdown, List } from './ui/index';
 
-let customLanguage = '';
+class SelectList extends Component {
+  componentDidUpdate(prevProps) {
+    const { Language } = this.props;
 
-class ChangeLanguageList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      toggle: false,
-      language: (Session.get('language') || props.Config.default),
-    };
+    if (Language && prevProps.Language !== Language) {
+      Session.set('language', Language);
+    }
   }
 
   render() {
-    const { Theme, Language, Config, ...props } = this.props;
-    const { toggle, language } = this.state;
+    const { Theme, Language, ...props } = this.props;
+    const defaultLanguage = (Storage.language() || Config.default);
 
-    Session.onSet(data => {
-      if (data.language && language !== data.language) {
-        this.setState({
-          language: data.language,
-        });
-      }
-    });
-
-    let returnElement = '';
+    let returnElement = <></>;
     // Custom List
     if (Language) {
-      if (customLanguage !== Language) {
-        Session.set('language', Language);
-      }
-      customLanguage = Language;
+
       // Default List
-    } else if (Theme === 'Dropdown') {
+    } else if (Theme.toLowerCase() === 'dropdown') {
       returnElement = (
         <div {...props}>
-          <div className={`rtc-dropdown ${(toggle ? 'toggle' : '')}`}>
-            <button type="button" className="rtc-dropdown-toggle" onClick={() => this.setState({ toggle: !toggle })}>
-              <img src={Config.list[language].icon} alt="Flag" />
-              {Config.list[language].text}
-            </button>
-            <div className="rtc-dropdown-menu">
-              {Object.keys(Config.list).map(key => (
-                <button key={key} type="button" className="rtc-btn" data-selected={(key === language)} onClick={() => { Session.set('language', key); this.setState({ toggle: false }); }}>
-                  <img src={Config.list[key].icon} alt="Flag" className="rtc-flag" />
-                  {Config.list[key].text}
-                </button>
-              ))}
-            </div>
-          </div>
+          <Dropdown languages={Config.list} defaultLanguage={defaultLanguage} />
         </div>
       );
     } else {
       returnElement = (
         <div {...props}>
-          <ul className="rtc-translator">
-            {Object.keys(Config.list).map(key => (
-              <li key={key} value={key} data-selected={(key === language)}>
-                <button type="button" onClick={() => Session.set('language', key)}>
-                  <img src={Config.list[key].icon} alt="Flag" className="rtc-flag" />
-                  <span className="rtc-title">{Config.list[key].text}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          <List languages={Config.list} defaultLanguage={defaultLanguage} />
         </div>
       );
     }
@@ -73,18 +40,14 @@ class ChangeLanguageList extends Component {
   }
 }
 
-ChangeLanguageList.propTypes = {
+SelectList.propTypes = {
   Theme: PropTypes.string,
   Language: PropTypes.string,
-  Config: PropTypes.object,
 };
 
-ChangeLanguageList.defaultProps = {
+SelectList.defaultProps = {
   Theme: '',
   Language: '',
-  Config: {
-    list: [],
-  },
 };
 
-export default ChangeLanguageList;
+export default SelectList;

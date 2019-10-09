@@ -1,89 +1,61 @@
 import React, { Component } from 'react';
-import ReactHtmlParser from 'react-html-parser';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
-import ChangeLanguageList from './list';
+import ReactHtmlParser from 'react-html-parser';
+import Storage from './storage';
+import Config from './config';
+import SelectList from './list';
 import './index.css';
 
-const storageKey = {
-  lang: 'rtc-lang',
-  missing: 'rtc-missing-keys',
-};
-
-let Config = {
-  default: '',
-  list: [],
-};
-
-let file = {};
-
-const LocalStorage = {
-  support: () => {
-    try {
-      const key = 'jcfOnRWMIvigArtNb1z3hj6yQ2xlZGiD';
-      localStorage.setItem(key, key);
-      localStorage.removeItem(key);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  },
-  getItem: key => {
-    if (LocalStorage.support()) {
-      return localStorage.getItem(key);
-    }
-    return null;
-  },
-  setItem: (key, value) => {
-    if (LocalStorage.support()) {
-      localStorage.setItem(key, value);
-    }
-  },
-};
-
+let File = {};
 
 class Translator extends Component {
   constructor(props) {
     super(props);
 
-    // load config
-    Config = (props.Config || Config);
-
     // set language
-    const language = (LocalStorage.getItem(storageKey.lang) || Config.default);
+    const defaultLangugae = (Storage.language() || Config.default);
 
     // load file
-    file = (Config.list[language] ? Config.list[language].file : '');
+    File = (Config.list[defaultLangugae] ? Config.list[defaultLangugae].file : '');
 
-    Session.set(language, language);
+    Session.set('language', defaultLangugae);
     // set state language
     this.state = {
-      language,
+      language: defaultLangugae,
     };
   }
 
-  render() {
-    Session.onSet(data => {
+  componentDidMount() {
+    const translator = data => {
       const { language } = data;
       const { language: stateLanguage } = this.state;
 
       if (language && language !== stateLanguage) {
         // set localStorage
-        LocalStorage.setItem(storageKey.lang, language);
+        Storage.setLanguage(language);
 
         // load file
-        file = Config.list[language].file;
+        File = Config.list[language].file;
 
         // set state language
         this.setState({ language });
       }
-    });
+    };
 
+    Session.onSet(translator);
+  }
+
+  componentWillUnmount() {
+    Session.unmount('translator');
+  }
+
+  render() {
+    this.mounted = true;
     const { children } = this.props;
-    const { language } = this.state;
     return (
       <>
-        {React.cloneElement(children, { language })}
+        {React.Children.map(children, (child => React.cloneElement(child)))}
       </>
     );
   }
@@ -91,32 +63,26 @@ class Translator extends Component {
 
 Translator.propTypes = {
   children: PropTypes.node,
-  Config: PropTypes.object,
 };
 
 Translator.defaultProps = {
   children: null,
-  Config: {
-    default: '',
-    list: [],
-  },
 };
 
-
 const SetLanguageFile = text => {
-  const languageFile = (JSON.parse(LocalStorage.getItem(storageKey.missing)) || {});
+  const languageFile = (JSON.parse(Storage.missing()) || {});
 
   languageFile[`"${text}"`] = text;
 
   try {
-    LocalStorage.setItem(storageKey.missing, JSON.stringify(languageFile));
+    Storage.setMissing(JSON.stringify(languageFile));
     // eslint-disable-next-line no-empty
   } catch { }
 
   return text;
 };
 
-const T = text => (ReactHtmlParser(file[text] || SetLanguageFile(text)));
+const T = text => (ReactHtmlParser(File[text] || SetLanguageFile(text)));
 
 const TranslateFormat = (text, ...args) => {
   const traslatedText = T(text)[0];
@@ -132,6 +98,6 @@ const TranslateFormat = (text, ...args) => {
 
 const TF = (text, ...args) => (TranslateFormat(text, args));
 
-const LanguageList = props => <ChangeLanguageList {...props} />;
+const LanguageList = props => <SelectList {...props} />;
 
-export { Translator, T, TF, LanguageList };
+export { Translator, T, TF, LanguageList, Config };
