@@ -21,14 +21,15 @@ $ npm install react-translator-component
 Quite simple to use;
 - Make your translator configuration.
 - Include text contents in the  ```T(text)``` function.
-- Finally, call your application in `TranslatorProvider > TranslatorContext`.
+- Finally, call your application in `<Translator> /* APP */ </Translator>`.
 
 ```jsx
 // App.js
 import React from 'react';
-import { TranslatorProvider, TranslatorContext, T, TF, LanguageList } from 'react-translator-component'
+import { Translator, T, TF, LanguageList, Config } from 'react-translator-component'
 
-const config = {
+Config.default = 'tr';
+Config.list = {
   default: 'en',
   list: {
     en: {
@@ -48,11 +49,11 @@ function App() {
   return (
     <div>
       <h1>
-	  	{T("There are no facts, only interpretations.")}
-	  </h1>
+        {T("There are no facts, only interpretations.")}
+      </h1>
       <h6>
-	 	 {TF("{0} {1}", "Friedrich", "Nietzsche")}
-	  </h6>
+        {TF("{0} {1}", "Friedrich", "Nietzsche")}
+      </h6>
       <LanguageList />
     </div>
   )
@@ -60,13 +61,9 @@ function App() {
 
 function TranslatorApp() {
   return (
-    <TranslatorProvider Config={config}>
-      <TranslatorContext>
-        {() => (
-          <App />
-        )}
-      </TranslatorContext>
-    </TranslatorProvider >
+    <Translator>
+      <App />
+    </Translator>
   )
 }
 
@@ -76,29 +73,28 @@ export default TranslatorApp;
 #### Config
 
 ```jsx
-const RTC_Config = {
-  // default language key
-  default: 'tr',
-  // language list
-  list: {
-    de: {
-	  // display text
-      text: 'Deutsch',
-	  // display icon
-      icon: require('./locale/flags/de.svg'),
-	  // translate file
-      file: require('./locale/de')
-    },
-    en: {
-      text: 'English',
-      icon: require('./locale/flags/en.svg'),
-      file: require('./locale/en')
-    },
-    tr: {
-      text: 'Türkçe',
-      icon: require('./locale/flags/tr.svg'),
-      file: require('./locale/tr')
-    }
+/* Default Language */
+Config.default = 'tr';
+
+/* Language List */
+Config.list = {
+  de: {
+    // display text
+    text: 'Deutsch',
+    // display icon
+    icon: require('./locale/flags/de.svg'),
+    // translate file
+    file: require('./locale/de')
+  },
+  en: {
+    text: 'English',
+    icon: require('./locale/flags/en.svg'),
+    file: require('./locale/en')
+  },
+  tr: {
+    text: 'Türkçe',
+    icon: require('./locale/flags/tr.svg'),
+    file: require('./locale/tr')
   }
 }
 ```
