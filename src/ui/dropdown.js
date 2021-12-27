@@ -1,67 +1,58 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 
-export class Dropdown extends Component {
-  constructor(props) {
-    super(props);
-    const { defaultLanguage } = props;
+export const Dropdown = ({ languages, defaultLanguage }) => {
+  const [currentLanguage, setCurrentLanguage] = useState('');
+  const [toggle, setToggle] = useState(false);
+  const [keys, setKeys] = useState([]);
 
-    this.state = {
-      language: defaultLanguage,
-      toggle: false,
-    };
+  useEffect(() => {
+    setCurrentLanguage(defaultLanguage);
 
     const dropdown = data => {
-      const { language } = this.state;
-
-      if (data.language && language !== data.language) {
-        this.setState({ language: data.language });
+      if (data.language && currentLanguage !== data.language) {
+        setCurrentLanguage(data.language);
       }
     };
 
     Session.onSet(dropdown);
-  }
+    setKeys(Object.keys(languages));
 
-  componentWillUnmount() {
-    Session.unmount('dropdown');
-  }
+    return () => {
+      Session.unmount('dropdown');
+    };
+  }, []);
 
-  render() {
-    const { languages } = this.props;
-    const { language, toggle } = this.state;
-    const keys = Object.keys(languages);
-
-    return (
-      <div className={`rtc-dropdown ${(toggle ? 'toggle' : '')}`}>
-        {keys.length > 0 &&
-          (
-            <button type="button" className="rtc-dropdown-toggle" onClick={() => this.setState(prevState => ({ toggle: !prevState.toggle }))}>
-              <img src={languages[language].icon} alt="Flag" />
-              {languages[language].text}
-            </button>
-          )}
-        <div className="rtc-dropdown-menu">
-          {keys.map(key => (
-            <button
-              key={key}
-              type="button"
-              className="rtc-btn"
-              data-selected={(key === language)}
-              onClick={() => {
-                Session.set('language', key);
-                this.setState({ toggle: false });
-              }}
-            >
-              <img src={languages[key].icon} alt="Flag" className="rtc-flag" />
-              {languages[key].text}
-            </button>
-          ))}
-        </div>
+  return (
+    <div className={`rtc-dropdown ${(toggle ? 'toggle' : '')}`}>
+      {keys.length > 0 &&
+              (
+                <button type="button" className="rtc-dropdown-toggle" onClick={() => setToggle(!toggle)}>
+                  <img src={languages[currentLanguage].icon} alt="Flag" />
+                  {languages[currentLanguage].text}
+                </button>
+              )}
+      <div className="rtc-dropdown-menu">
+        {keys.map(key => (
+          <button
+            key={key}
+            type="button"
+            className="rtc-btn"
+            data-selected={(key === currentLanguage)}
+            onClick={() => {
+              Session.set('language', key);
+              setToggle(false);
+            }}
+          >
+            <img src={languages[key].icon} alt="Flag" className="rtc-flag" />
+            {languages[key].text}
+          </button>
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 Dropdown.propTypes = {
   languages: PropTypes.object.isRequired,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 import ReactHtmlParser from 'react-html-parser';
@@ -9,57 +9,43 @@ import './index.css';
 
 let File = {};
 
-class Translator extends Component {
-  constructor(props) {
-    super(props);
+const Translator = ({ children }) => {
+  const [currentLanguage, setCurrentLanguage] = useState();
 
-    // set language
+  useEffect(() => {
     const defaultLangugae = (Storage.language() || Config.default);
 
-    // load file
     File = (Config.list[defaultLangugae] ? Config.list[defaultLangugae].file : '');
 
     Session.set('language', defaultLangugae);
-    // set state language
-    this.state = {
-      language: defaultLangugae,
-    };
-  }
 
-  componentDidMount() {
+    setCurrentLanguage(defaultLangugae);
+
     const translator = data => {
-      const { language } = data;
-      const { language: stateLanguage } = this.state;
-
-      if (language && language !== stateLanguage) {
+      if (data.language && data.language !== currentLanguage) {
         // set localStorage
-        Storage.setLanguage(language);
+        Storage.setLanguage(data.language);
 
         // load file
-        File = Config.list[language].file;
+        File = Config.list[data.language].file;
 
-        // set state language
-        this.setState({ language });
+        setCurrentLanguage(data.language);
       }
     };
 
     Session.onSet(translator);
-  }
 
-  componentWillUnmount() {
-    Session.unmount('translator');
-  }
+    return () => {
+      Session.unmount('translator');
+    };
+  }, []);
 
-  render() {
-    this.mounted = true;
-    const { children } = this.props;
-    return (
-      <>
-        {React.Children.map(children, (child => React.cloneElement(child)))}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {React.Children.map(children, (child => React.cloneElement(child)))}
+    </>
+  );
+};
 
 Translator.propTypes = {
   children: PropTypes.node,

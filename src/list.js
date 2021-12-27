@@ -1,44 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 import Config from './config';
 import Storage from './storage';
 import { Dropdown, List } from './ui/index';
 
-class SelectList extends Component {
-  componentDidUpdate(prevProps) {
-    const { Language } = this.props;
+const SelectList = ({ Theme, Language }) => {
+  const [currentLanguage, setCurrentLanguage] = useState();
 
-    if (Language && prevProps.Language !== Language) {
+  useEffect(() => {
+    if (Language && Language !== currentLanguage) {
       Session.set('language', Language);
-    }
-  }
-
-  render() {
-    const { Theme, Language, ...props } = this.props;
-    const defaultLanguage = (Storage.language() || Config.default);
-
-    let returnElement = <></>;
-    // Custom List
-    if (Language) {
-
-      // Default List
-    } else if (Theme.toLowerCase() === 'dropdown') {
-      returnElement = (
-        <div {...props}>
-          <Dropdown languages={Config.list} defaultLanguage={defaultLanguage} />
-        </div>
-      );
+      setCurrentLanguage(Language);
     } else {
-      returnElement = (
-        <div {...props}>
-          <List languages={Config.list} defaultLanguage={defaultLanguage} />
-        </div>
-      );
+      const defaultLanguage = Storage.language() || Config.default;
+      Session.set('language', defaultLanguage);
+      setCurrentLanguage(defaultLanguage);
     }
-    return returnElement;
-  }
-}
+  }, []);
+
+  const returnElement = {
+    dropdown: (
+      <div>
+        <Dropdown languages={Config.list} defaultLanguage={currentLanguage} />
+      </div>
+    ),
+    list: (
+      <div>
+        <List languages={Config.list} defaultLanguage={currentLanguage} />
+      </div>
+    ),
+  };
+
+  return returnElement[Theme];
+};
 
 SelectList.propTypes = {
   Theme: PropTypes.string,
