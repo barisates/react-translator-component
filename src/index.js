@@ -13,7 +13,7 @@ const Translator = ({ children }) => {
   const [, setCurrentLanguage] = useState();
 
   useEffect(() => {
-    const defaultLanguage = (Object.keys(Config.list).includes(Storage.language()) ? Storage.language() :  Config.default);
+    const defaultLanguage = (Object.keys(Config.list).includes(Storage.language()) ? Storage.language() : Config.default);
 
     File = Config.list[defaultLanguage].file;
 
@@ -22,7 +22,8 @@ const Translator = ({ children }) => {
     setCurrentLanguage(defaultLanguage);
 
     const translator = data => {
-      if (data.language && data.language !== defaultLanguage) {
+      const previousLanguage = Storage.language();
+      if (data.language && data.language !== previousLanguage) {
         // set localStorage
         Storage.setLanguage(data.language);
 
@@ -84,16 +85,18 @@ const TranslateFormat = (text, ...args) => {
 
 const TF = (text, ...args) => (TranslateFormat(text, args));
 
-const LanguageList = ({ Theme, Language }) => <SelectList Theme={Theme} Language={Language} />;
+const LanguageList = ({ Theme, Language, onChange }) => <SelectList Theme={Theme} Language={Language} onChange={onChange} />;
 
 LanguageList.propTypes = {
   Theme: PropTypes.string,
   Language: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 LanguageList.defaultProps = {
   Theme: 'dropdown',
   Language: Config.default,
+  onChange: () => {},
 };
 
 export { Translator, T, TF, LanguageList, Config };
