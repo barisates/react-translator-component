@@ -6,7 +6,7 @@ import Storage from './storage';
 import { Dropdown, List } from './ui/index';
 
 const SelectList = ({ Theme, Language }) => {
-  const [currentLanguage, setCurrentLanguage] = useState();
+  const [currentLanguage, setCurrentLanguage] = useState(Config.default);
 
   useEffect(() => {
     if (Language && Language !== currentLanguage) {

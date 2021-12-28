@@ -10,19 +10,19 @@ import './index.css';
 let File = {};
 
 const Translator = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState();
+  const [, setCurrentLanguage] = useState();
 
   useEffect(() => {
-    const defaultLangugae = (Storage.language() || Config.default);
+    const defaultLanguage = (Object.keys(Config.list).includes(Storage.language()) ? Storage.language() :  Config.default);
 
-    File = (Config.list[defaultLangugae] ? Config.list[defaultLangugae].file : '');
+    File = Config.list[defaultLanguage].file;
 
-    Session.set('language', defaultLangugae);
-
-    setCurrentLanguage(defaultLangugae);
+    Session.set('language', defaultLanguage);
+    Storage.setLanguage(defaultLanguage);
+    setCurrentLanguage(defaultLanguage);
 
     const translator = data => {
-      if (data.language && data.language !== currentLanguage) {
+      if (data.language && data.language !== defaultLanguage) {
         // set localStorage
         Storage.setLanguage(data.language);
 
@@ -84,6 +84,16 @@ const TranslateFormat = (text, ...args) => {
 
 const TF = (text, ...args) => (TranslateFormat(text, args));
 
-const LanguageList = props => <SelectList {...props} />;
+const LanguageList = ({ Theme, Language }) => <SelectList Theme={Theme} Language={Language} />;
+
+LanguageList.propTypes = {
+  Theme: PropTypes.string,
+  Language: PropTypes.string,
+};
+
+LanguageList.defaultProps = {
+  Theme: 'dropdown',
+  Language: Config.default,
+};
 
 export { Translator, T, TF, LanguageList, Config };

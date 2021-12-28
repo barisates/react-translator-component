@@ -77,14 +77,14 @@ class App extends Component {
               <tr>
                 <td>
                   <p>Dropdown Theme</p>
-                  <LanguageList Theme="Dropdown" />
+                  <LanguageList />
                   <br />
                   <br />
                   <p>Default Theme</p>
                   <LanguageList />
                 </td>
                 <td>
-                  <LanguageList Language={language} />
+                  <LanguageList Theme="list" Language={language} />
                   <select className="custom-language-list" value={language} onChange={e => this.setState({ language: e.target.value })}>
                     {Object.keys(Config.list).map(key => (<option key={key} value={key}>{Config.list[key].text}</option>))}
                   </select>
