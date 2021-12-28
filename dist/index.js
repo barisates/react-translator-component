@@ -33,94 +33,56 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var File = {};
 
-var Translator =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(Translator, _Component);
+var Translator = function Translator(_ref) {
+  var children = _ref.children;
 
-  function Translator(props) {
-    var _this;
+  var _useState = (0, _react.useState)(),
+      _useState2 = _slicedToArray(_useState, 2),
+      setCurrentLanguage = _useState2[1];
 
-    _classCallCheck(this, Translator);
+  (0, _react.useEffect)(function () {
+    var defaultLanguage = Object.keys(_config["default"].list).includes(_storage["default"].language()) ? _storage["default"].language() : _config["default"]["default"];
+    File = _config["default"].list[defaultLanguage].file;
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Translator).call(this, props)); // set language
+    _reactSessionApi["default"].set('language', defaultLanguage);
 
-    var defaultLangugae = _storage["default"].language() || _config["default"]["default"]; // load file
+    _storage["default"].setLanguage(defaultLanguage);
+
+    setCurrentLanguage(defaultLanguage);
+
+    var translator = function translator(data) {
+      var previousLanguage = _storage["default"].language();
+
+      if (data.language && data.language !== previousLanguage) {
+        // set localStorage
+        _storage["default"].setLanguage(data.language); // load file
 
 
-    File = _config["default"].list[defaultLangugae] ? _config["default"].list[defaultLangugae].file : '';
-
-    _reactSessionApi["default"].set('language', defaultLangugae); // set state language
-
-
-    _this.state = {
-      language: defaultLangugae
+        File = _config["default"].list[data.language].file;
+        setCurrentLanguage(data.language);
+      }
     };
-    return _this;
-  }
 
-  _createClass(Translator, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
+    _reactSessionApi["default"].onSet(translator);
 
-      var translator = function translator(data) {
-        var language = data.language;
-        var stateLanguage = _this2.state.language;
-
-        if (language && language !== stateLanguage) {
-          // set localStorage
-          _storage["default"].setLanguage(language); // load file
-
-
-          File = _config["default"].list[language].file; // set state language
-
-          _this2.setState({
-            language: language
-          });
-        }
-      };
-
-      _reactSessionApi["default"].onSet(translator);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
+    return function () {
       _reactSessionApi["default"].unmount('translator');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      this.mounted = true;
-      var children = this.props.children;
-      return _react["default"].createElement(_react["default"].Fragment, null, _react["default"].Children.map(children, function (child) {
-        return _react["default"].cloneElement(child);
-      }));
-    }
-  }]);
-
-  return Translator;
-}(_react.Component);
+    };
+  }, []);
+  return _react["default"].createElement(_react["default"].Fragment, null, _react["default"].Children.map(children, function (child) {
+    return _react["default"].cloneElement(child);
+  }));
+};
 
 exports.Translator = Translator;
 Translator.propTypes = {
@@ -170,8 +132,25 @@ var TF = function TF(text) {
 
 exports.TF = TF;
 
-var LanguageList = function LanguageList(props) {
-  return _react["default"].createElement(_list["default"], props);
+var LanguageList = function LanguageList(_ref2) {
+  var Theme = _ref2.Theme,
+      Language = _ref2.Language,
+      onChange = _ref2.onChange;
+  return _react["default"].createElement(_list["default"], {
+    Theme: Theme,
+    Language: Language,
+    onChange: onChange
+  });
 };
 
 exports.LanguageList = LanguageList;
+LanguageList.propTypes = {
+  Theme: _propTypes["default"].string,
+  Language: _propTypes["default"].string,
+  onChange: _propTypes["default"].func
+};
+LanguageList.defaultProps = {
+  Theme: 'dropdown',
+  Language: _config["default"]["default"],
+  onChange: function onChange() {}
+};
