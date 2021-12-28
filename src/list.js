@@ -1,53 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 import Config from './config';
-import Storage from './storage';
 import { Dropdown, List } from './ui/index';
 
-class SelectList extends Component {
-  componentDidUpdate(prevProps) {
-    const { Language } = this.props;
+const SelectList = ({ Theme, Language, onChange }) => {
+  const [currentLanguage] = useState(Config.default);
 
-    if (Language && prevProps.Language !== Language) {
-      Session.set('language', Language);
+  const onLanguageChange = data => {
+    if (data && data.language) {
+      onChange(data.language);
     }
-  }
+  };
 
-  render() {
-    const { Theme, Language, ...props } = this.props;
-    const defaultLanguage = (Storage.language() || Config.default);
+  useEffect(() => {
+    Session.onSet(onLanguageChange);
+  }, []);
 
-    let returnElement = <></>;
-    // Custom List
-    if (Language) {
+  const returnElement = {
+    dropdown: (
+      <div>
+        <Dropdown languages={Config.list} defaultLanguage={currentLanguage} />
+      </div>
+    ),
+    list: (
+      <div>
+        <List languages={Config.list} defaultLanguage={currentLanguage} />
+      </div>
+    ),
+  };
 
-      // Default List
-    } else if (Theme.toLowerCase() === 'dropdown') {
-      returnElement = (
-        <div {...props}>
-          <Dropdown languages={Config.list} defaultLanguage={defaultLanguage} />
-        </div>
-      );
-    } else {
-      returnElement = (
-        <div {...props}>
-          <List languages={Config.list} defaultLanguage={defaultLanguage} />
-        </div>
-      );
-    }
-    return returnElement;
-  }
-}
+  return returnElement[Theme];
+};
 
 SelectList.propTypes = {
   Theme: PropTypes.string,
   Language: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 SelectList.defaultProps = {
   Theme: '',
   Language: '',
+  onChange: () => {},
 };
 
 export default SelectList;

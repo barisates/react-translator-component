@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 import ReactHtmlParser from 'react-html-parser';
@@ -9,57 +9,44 @@ import './index.css';
 
 let File = {};
 
-class Translator extends Component {
-  constructor(props) {
-    super(props);
+const Translator = ({ children }) => {
+  const [, setCurrentLanguage] = useState();
 
-    // set language
-    const defaultLangugae = (Storage.language() || Config.default);
+  useEffect(() => {
+    const defaultLanguage = (Object.keys(Config.list).includes(Storage.language()) ? Storage.language() : Config.default);
 
-    // load file
-    File = (Config.list[defaultLangugae] ? Config.list[defaultLangugae].file : '');
+    File = Config.list[defaultLanguage].file;
 
-    Session.set('language', defaultLangugae);
-    // set state language
-    this.state = {
-      language: defaultLangugae,
-    };
-  }
+    Session.set('language', defaultLanguage);
+    Storage.setLanguage(defaultLanguage);
+    setCurrentLanguage(defaultLanguage);
 
-  componentDidMount() {
     const translator = data => {
-      const { language } = data;
-      const { language: stateLanguage } = this.state;
-
-      if (language && language !== stateLanguage) {
+      const previousLanguage = Storage.language();
+      if (data.language && data.language !== previousLanguage) {
         // set localStorage
-        Storage.setLanguage(language);
+        Storage.setLanguage(data.language);
 
         // load file
-        File = Config.list[language].file;
+        File = Config.list[data.language].file;
 
-        // set state language
-        this.setState({ language });
+        setCurrentLanguage(data.language);
       }
     };
 
     Session.onSet(translator);
-  }
 
-  componentWillUnmount() {
-    Session.unmount('translator');
-  }
+    return () => {
+      Session.unmount('translator');
+    };
+  }, []);
 
-  render() {
-    this.mounted = true;
-    const { children } = this.props;
-    return (
-      <>
-        {React.Children.map(children, (child => React.cloneElement(child)))}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {React.Children.map(children, (child => React.cloneElement(child)))}
+    </>
+  );
+};
 
 Translator.propTypes = {
   children: PropTypes.node,
@@ -98,6 +85,18 @@ const TranslateFormat = (text, ...args) => {
 
 const TF = (text, ...args) => (TranslateFormat(text, args));
 
-const LanguageList = props => <SelectList {...props} />;
+const LanguageList = ({ Theme, Language, onChange }) => <SelectList Theme={Theme} Language={Language} onChange={onChange} />;
+
+LanguageList.propTypes = {
+  Theme: PropTypes.string,
+  Language: PropTypes.string,
+  onChange: PropTypes.func,
+};
+
+LanguageList.defaultProps = {
+  Theme: 'dropdown',
+  Language: Config.default,
+  onChange: () => {},
+};
 
 export { Translator, T, TF, LanguageList, Config };
