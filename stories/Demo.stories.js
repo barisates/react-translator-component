@@ -48,6 +48,7 @@ Config.list = {
 };
 
 const App = () => {
+  const [, setTest] = useState();
   return (
     <div className="App">
       <header className="App-header">
@@ -70,7 +71,7 @@ const App = () => {
               </td> */}
               <td>
                 <p>Dropdown Theme With Onchange</p>
-                <LanguageList onChange={lang => { console.log('Hello World!', lang); }} />
+                <LanguageList onChange={(lang) => setTest(lang)} />
                 <br />
               </td>
 

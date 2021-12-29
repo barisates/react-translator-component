@@ -4,7 +4,7 @@ import Session from 'react-session-api';
 import Config from './config';
 import { Dropdown, List } from './ui/index';
 
-const SelectList = ({ Theme, Language, onChange }) => {
+const SelectList = ({ Theme, onChange }) => {
   const [currentLanguage] = useState(Config.default);
 
   const onLanguageChange = data => {
@@ -35,13 +35,11 @@ const SelectList = ({ Theme, Language, onChange }) => {
 
 SelectList.propTypes = {
   Theme: PropTypes.string,
-  Language: PropTypes.string,
   onChange: PropTypes.func,
 };
 
 SelectList.defaultProps = {
   Theme: '',
-  Language: '',
   onChange: () => {},
 };
 
