@@ -15,6 +15,8 @@ const Translator = ({ children }) => {
   useEffect(() => {
     const defaultLanguage = (Object.keys(Config.list).includes(Storage.language()) ? Storage.language() : Config.default);
 
+    File = Config.list[defaultLanguage].file;
+
     Session.set('language', defaultLanguage);
     Storage.setLanguage(defaultLanguage);
     setCurrentLanguage(defaultLanguage);
@@ -27,6 +29,7 @@ const Translator = ({ children }) => {
 
         // load file
         File = Config.list[data.language].file;
+
         setCurrentLanguage(data.language);
       }
     };
@@ -40,7 +43,7 @@ const Translator = ({ children }) => {
 
   return (
     <>
-      {children}
+      {React.Children.map(children, (child => React.cloneElement(child)))}
     </>
   );
 };
@@ -66,10 +69,7 @@ const SetLanguageFile = text => {
   return text;
 };
 
-const T = text => {
-  console.log(File);
-  return ReactHtmlParser(File[text] || SetLanguageFile(text));
-};
+const T = text => (ReactHtmlParser(File[text] || SetLanguageFile(text)));
 
 const TranslateFormat = (text, ...args) => {
   const traslatedText = T(text)[0];
