@@ -11,14 +11,7 @@ export const Dropdown = ({ languages, defaultLanguage }) => {
     setCurrentLanguage(defaultLanguage);
 
     const dropdown = data => {
-      if (!data.language) return;
-
-      if (!languages[data.language]) {
-        setCurrentLanguage(defaultLanguage);
-        return;
-      }
-
-      if (currentLanguage !== data.language) {
+      if (data.language && currentLanguage !== data.language) {
         setCurrentLanguage(data.language);
       }
     };
