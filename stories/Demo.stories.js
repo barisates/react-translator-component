@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Translator, T, TF, LanguageList, Config } from '../src';
 import './css/bootstrap.min.css';
 import './css/demo.css';
@@ -47,45 +47,61 @@ Config.list = {
   },
 };
 
-const App = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <div>
-          <h6>{T('Doğrular ve yanlışlar yoktur, sadece yorumlar vardır.')}</h6>
-          <h6><small><i>{TF('{0} {1}', 'Friedrich', 'Nietzsche')}</i></small></h6>
-        </div>
-        <table className="language-lists">
-          <thead>
-            <tr>
-              <td>Default Language List</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {/* <td>
-                <p>Dropdown Theme</p>
-                <LanguageList />
-                <br />
-              </td> */}
-              <td>
-                <p>Dropdown Theme With Onchange</p>
-                <LanguageList onChange={lang => { console.log('Hello World!', lang); }} />
-                <br />
-              </td>
 
-            </tr>
-          </tbody>
-        </table>
-        <div className="author">
-          <a href="https://github.com/barisates" target="_blank" rel="noopener noreferrer" className="mr-1">barisates</a>
-          <a href="https://github.com/eneszeren" target="_blank" rel="noopener noreferrer" className="ml-1">eneszeren</a>
-          <a href="https://github.com/yusufsina" target="_blank" rel="noopener noreferrer" className="ml-1">yusufsina</a>
-        </div>
-      </header>
-    </div>
-  );
-};
+class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      language: Config.default,
+    };
+  }
+
+  render() {
+    const { language } = this.state;
+    return (
+      <div className="App">
+        <header className="App-header">
+          <div>
+            <h6>{T('Doğrular ve yanlışlar yoktur, sadece yorumlar vardır.')}</h6>
+            <h6><small><i>{TF('{0} {1}', 'Friedrich', 'Nietzsche')}</i></small></h6>
+          </div>
+          <table className="language-lists">
+            <thead>
+              <tr>
+                <td>Default Language List</td>
+                <td>Custom Language List</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <p>Dropdown Theme</p>
+                  <LanguageList Theme="Dropdown" />
+                  <br />
+                  <br />
+                  <p>Default Theme</p>
+                  <LanguageList />
+                </td>
+                <td>
+                  <LanguageList Language={language} />
+                  <select className="custom-language-list" value={language} onChange={e => this.setState({ language: e.target.value })}>
+                    {Object.keys(Config.list).map(key => (<option key={key} value={key}>{Config.list[key].text}</option>))}
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="author">
+            <a href="https://github.com/barisates" target="_blank" rel="noopener noreferrer" className="mr-1">barisates</a>
+            <a href="https://github.com/eneszeren" target="_blank" rel="noopener noreferrer" className="ml-1">eneszeren</a>
+          </div>
+        </header>
+      </div>
+    );
+  }
+}
+
 export const Demo = () => (
 
   <Translator>
