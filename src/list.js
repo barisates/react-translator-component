@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Session from 'react-session-api';
 import Config from './config';
+import Storage from './storage';
 import { Dropdown, List } from './ui/index';
 
-const SelectList = ({ Theme, Language, onChange }) => {
-  const [currentLanguage] = useState(Config.default);
-
-  const onLanguageChange = data => {
-    if (data && data.language) {
-      onChange(data.language);
-    }
-  };
+const SelectList = ({ Theme, Language }) => {
+  const [currentLanguage, setCurrentLanguage] = useState(Config.default);
 
   useEffect(() => {
-    Session.onSet(onLanguageChange);
+    if (Language && Language !== currentLanguage) {
+      Session.set('language', Language);
+      setCurrentLanguage(Language);
+    } else {
+      const defaultLanguage = Storage.language() || Config.default;
+      Session.set('language', defaultLanguage);
+      setCurrentLanguage(defaultLanguage);
+    }
   }, []);
 
   const returnElement = {
@@ -36,13 +38,11 @@ const SelectList = ({ Theme, Language, onChange }) => {
 SelectList.propTypes = {
   Theme: PropTypes.string,
   Language: PropTypes.string,
-  onChange: PropTypes.func,
 };
 
 SelectList.defaultProps = {
   Theme: '',
   Language: '',
-  onChange: () => {},
 };
 
 export default SelectList;
