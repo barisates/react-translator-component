@@ -5,7 +5,7 @@ import Session from 'react-session-api';
 export class Dropdown extends Component {
   constructor(props) {
     super(props);
-    const { defaultLanguage } = props;
+    const { defaultLanguage, onChange } = props;
 
     this.state = {
       language: defaultLanguage,
@@ -17,6 +17,8 @@ export class Dropdown extends Component {
 
       if (data.language && language !== data.language) {
         this.setState({ language: data.language });
+
+        onChange(data.language);
       }
     };
 
@@ -66,4 +68,9 @@ export class Dropdown extends Component {
 Dropdown.propTypes = {
   languages: PropTypes.object.isRequired,
   defaultLanguage: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+};
+
+Dropdown.defaultProps = {
+  onChange: () => {},
 };

@@ -15,7 +15,7 @@ class SelectList extends Component {
   }
 
   render() {
-    const { Theme, Language, ...props } = this.props;
+    const { Theme, Language, onChange, ...props } = this.props;
     const defaultLanguage = (Storage.language() || Config.default);
 
     let returnElement = <></>;
@@ -26,7 +26,7 @@ class SelectList extends Component {
     } else if (Theme.toLowerCase() === 'dropdown') {
       returnElement = (
         <div {...props}>
-          <Dropdown languages={Config.list} defaultLanguage={defaultLanguage} />
+          <Dropdown languages={Config.list} defaultLanguage={defaultLanguage} onChange={onChange} />
         </div>
       );
     } else {
@@ -43,11 +43,13 @@ class SelectList extends Component {
 SelectList.propTypes = {
   Theme: PropTypes.string,
   Language: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 SelectList.defaultProps = {
   Theme: '',
   Language: '',
+  onChange: () => {},
 };
 
 export default SelectList;
