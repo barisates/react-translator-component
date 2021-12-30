@@ -11,15 +11,19 @@ export class Dropdown extends Component {
       language: defaultLanguage,
       toggle: false,
     };
+  }
 
+  componentDidMount() {
     const dropdown = data => {
-      const { language } = this.state;
+      const { language, toggle } = this.state;
+      const { onChange } = this.props;
 
       if (data.language && language !== data.language) {
-        this.setState({ language: data.language });
+        this.setState({ language: data.language, toggle });
+
+        onChange(data.language);
       }
     };
-
     Session.onSet(dropdown);
   }
 
@@ -66,4 +70,9 @@ export class Dropdown extends Component {
 Dropdown.propTypes = {
   languages: PropTypes.object.isRequired,
   defaultLanguage: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+};
+
+Dropdown.defaultProps = {
+  onChange: () => {},
 };
