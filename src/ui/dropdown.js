@@ -5,21 +5,21 @@ import Session from 'react-session-api';
 export class Dropdown extends Component {
   constructor(props) {
     super(props);
-    const { defaultLanguage, onChange } = props;
+    const { defaultLanguage } = props;
 
     this.state = {
       language: defaultLanguage,
       toggle: false,
-      onChange,
     };
   }
 
   componentDidMount() {
     const dropdown = data => {
-      const { language, onChange, toggle } = this.state;
+      const { language, toggle } = this.state;
+      const { onChange } = this.props;
 
       if (data.language && language !== data.language) {
-        this.setState({ language: data.language, toggle, onChange });
+        this.setState({ language: data.language, toggle });
 
         onChange(data.language);
       }

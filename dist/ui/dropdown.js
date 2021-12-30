@@ -46,12 +46,10 @@ function (_Component) {
     _classCallCheck(this, Dropdown);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Dropdown).call(this, props));
-    var defaultLanguage = props.defaultLanguage,
-        onChange = props.onChange;
+    var defaultLanguage = props.defaultLanguage;
     _this.state = {
       language: defaultLanguage,
-      toggle: false,
-      onChange: onChange
+      toggle: false
     };
     return _this;
   }
@@ -64,14 +62,13 @@ function (_Component) {
       var dropdown = function dropdown(data) {
         var _this2$state = _this2.state,
             language = _this2$state.language,
-            onChange = _this2$state.onChange,
             toggle = _this2$state.toggle;
+        var onChange = _this2.props.onChange;
 
         if (data.language && language !== data.language) {
           _this2.setState({
             language: data.language,
-            toggle: toggle,
-            onChange: onChange
+            toggle: toggle
           });
 
           onChange(data.language);
@@ -95,7 +92,6 @@ function (_Component) {
           language = _this$state.language,
           toggle = _this$state.toggle;
       var keys = Object.keys(languages);
-      console.log('test3', language);
       return _react["default"].createElement("div", {
         className: "rtc-dropdown ".concat(toggle ? 'toggle' : '')
       }, keys.length > 0 && _react["default"].createElement("button", {
