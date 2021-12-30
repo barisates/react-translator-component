@@ -71,7 +71,8 @@ function (_Component) {
       var _this$props = this.props,
           Theme = _this$props.Theme,
           Language = _this$props.Language,
-          props = _objectWithoutProperties(_this$props, ["Theme", "Language"]);
+          onChange = _this$props.onChange,
+          props = _objectWithoutProperties(_this$props, ["Theme", "Language", "onChange"]);
 
       var defaultLanguage = _storage["default"].language() || _config["default"]["default"];
 
@@ -82,7 +83,8 @@ function (_Component) {
       } else if (Theme.toLowerCase() === 'dropdown') {
         returnElement = _react["default"].createElement("div", props, _react["default"].createElement(_index.Dropdown, {
           languages: _config["default"].list,
-          defaultLanguage: defaultLanguage
+          defaultLanguage: defaultLanguage,
+          onChange: onChange
         }));
       } else {
         returnElement = _react["default"].createElement("div", props, _react["default"].createElement(_index.List, {
@@ -100,11 +102,13 @@ function (_Component) {
 
 SelectList.propTypes = {
   Theme: _propTypes["default"].string,
-  Language: _propTypes["default"].string
+  Language: _propTypes["default"].string,
+  onChange: _propTypes["default"].func
 };
 SelectList.defaultProps = {
   Theme: '',
-  Language: ''
+  Language: '',
+  onChange: function onChange() {}
 };
 var _default = SelectList;
 exports["default"] = _default;

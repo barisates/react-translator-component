@@ -1,6 +1,6 @@
 {
   "name": "react-translator-component",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "React language translation module for developing a multilingual project.",
   "main": "dist/index.js",
   "scripts": {

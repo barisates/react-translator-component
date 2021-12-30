@@ -46,28 +46,41 @@ function (_Component) {
     _classCallCheck(this, Dropdown);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Dropdown).call(this, props));
-    var defaultLanguage = props.defaultLanguage;
+    var defaultLanguage = props.defaultLanguage,
+        onChange = props.onChange;
     _this.state = {
       language: defaultLanguage,
-      toggle: false
+      toggle: false,
+      onChange: onChange
     };
-
-    var dropdown = function dropdown(data) {
-      var language = _this.state.language;
-
-      if (data.language && language !== data.language) {
-        _this.setState({
-          language: data.language
-        });
-      }
-    };
-
-    _reactSessionApi["default"].onSet(dropdown);
-
     return _this;
   }
 
   _createClass(Dropdown, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var dropdown = function dropdown(data) {
+        var _this2$state = _this2.state,
+            language = _this2$state.language,
+            onChange = _this2$state.onChange,
+            toggle = _this2$state.toggle;
+
+        if (data.language && language !== data.language) {
+          _this2.setState({
+            language: data.language,
+            toggle: toggle,
+            onChange: onChange
+          });
+
+          onChange(data.language);
+        }
+      };
+
+      _reactSessionApi["default"].onSet(dropdown);
+    }
+  }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       _reactSessionApi["default"].unmount('dropdown');
@@ -75,20 +88,21 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var languages = this.props.languages;
       var _this$state = this.state,
           language = _this$state.language,
           toggle = _this$state.toggle;
       var keys = Object.keys(languages);
+      console.log('test3', language);
       return _react["default"].createElement("div", {
         className: "rtc-dropdown ".concat(toggle ? 'toggle' : '')
       }, keys.length > 0 && _react["default"].createElement("button", {
         type: "button",
         className: "rtc-dropdown-toggle",
         onClick: function onClick() {
-          return _this2.setState(function (prevState) {
+          return _this3.setState(function (prevState) {
             return {
               toggle: !prevState.toggle
             };
@@ -108,7 +122,7 @@ function (_Component) {
           onClick: function onClick() {
             _reactSessionApi["default"].set('language', key);
 
-            _this2.setState({
+            _this3.setState({
               toggle: false
             });
           }
@@ -127,5 +141,9 @@ function (_Component) {
 exports.Dropdown = Dropdown;
 Dropdown.propTypes = {
   languages: _propTypes["default"].object.isRequired,
-  defaultLanguage: _propTypes["default"].string.isRequired
+  defaultLanguage: _propTypes["default"].string.isRequired,
+  onChange: _propTypes["default"].func
+};
+Dropdown.defaultProps = {
+  onChange: function onChange() {}
 };

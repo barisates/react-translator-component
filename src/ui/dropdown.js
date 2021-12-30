@@ -10,18 +10,20 @@ export class Dropdown extends Component {
     this.state = {
       language: defaultLanguage,
       toggle: false,
+      onChange,
     };
+  }
 
+  componentDidMount() {
     const dropdown = data => {
-      const { language } = this.state;
+      const { language, onChange, toggle } = this.state;
 
       if (data.language && language !== data.language) {
-        this.setState({ language: data.language });
+        this.setState({ language: data.language, toggle, onChange });
 
         onChange(data.language);
       }
     };
-
     Session.onSet(dropdown);
   }
 

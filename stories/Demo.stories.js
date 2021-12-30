@@ -77,7 +77,7 @@ class App extends Component {
               <tr>
                 <td>
                   <p>Dropdown Theme</p>
-                  <LanguageList Theme="Dropdown" onChange={(lang) => {console.log(lang)}} />
+                  <LanguageList Theme="Dropdown" onChange={lang => { console.log(lang); }} />
                   <br />
                   <br />
                   <p>Default Theme</p>
