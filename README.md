@@ -30,18 +30,15 @@ import { Translator, T, TF, LanguageList, Config } from 'react-translator-compon
 
 Config.default = 'tr';
 Config.list = {
-  default: 'en',
-  list: {
-    en: {
-      text: 'English',
-      icon: require('./locale/flags/en.svg'),
-      file: require('./locale/en.js')
-    },
-    tr: {
-      text: 'Türkçe',
-      icon: require('./locale/flags/tr.svg'),
-      file: require('./locale/tr.js')
-    }
+  en: {
+    text: 'English',
+    icon: require('./locale/flags/en.svg'),
+    file: require('./locale/en.js')
+  },
+  tr: {
+    text: 'Türkçe',
+    icon: require('./locale/flags/tr.svg'),
+    file: require('./locale/tr.js')
   }
 }
 
